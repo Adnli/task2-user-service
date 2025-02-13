@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: ddl/2025-02-13_14-40_init-tables.yaml
+      relativeToChangelogFile: true
+
+  - include:
+      file: data/2025-02-13_14-45_add-user-credentials.yaml
+      relativeToChangelogFile: true
+
