@@ -23,12 +23,12 @@ public class UserService {
         return userMapper.toDto(userRepository.findById(id).orElse(null));
     }
 
-    public UserDto addUser(UserDto UserDto) {
-        return userMapper.toDto(userRepository.save(userMapper.toEntity(UserDto)));
+    public UserDto addUser(UserDto userDto) {
+        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDto)));
     }
 
-    public UserDto updateUser(UserDto UserDto) {
-        return userMapper.toDto(userRepository.save(userMapper.toEntity(UserDto)));
+    public UserDto updateUser(UserDto userDto) {
+        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDto)));
     }
 
     public void deleteUser(Long id) {

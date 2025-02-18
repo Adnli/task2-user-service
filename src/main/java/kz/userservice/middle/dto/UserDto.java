@@ -13,4 +13,5 @@ public class UserDto {
     private String email;
     private String login;
     private String fullName;
+    private Long photoId;
 }
