@@ -1,8 +1,8 @@
 server:
-  port: 8080
+  port: 8081
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/users
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 12345
   jpa:
@@ -16,7 +16,7 @@ spring:
     multipart:
       max-file-size: 5MB
 minio:
-  url: http://localhost:9000
+  url: http://minio-file-service:9000
   username: admin
   password: admin123
   bucket: users-photos
