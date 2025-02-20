@@ -45,7 +45,6 @@ public class FileService {
                     .build();
 
             UserProfilePhoto userProfilePhoto = userProfilePhotoMapper.toEntity(photo);
-            ;
 
             UserDto user = userService.getUser(userId);
             user.setPhotoId(userProfilePhotoRepository.save(userProfilePhoto).getId());

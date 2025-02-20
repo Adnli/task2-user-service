@@ -15,6 +15,20 @@ spring:
   servlet:
     multipart:
       max-file-size: 5MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.url}/realms/${keycloak.realm}
+keycloak:
+  url: http://localhost:8002/auth
+  realm: master
+  client-id: user-service-client
+  client-secret: FjsgocFvk2rMfY59PfFliT44s8LtcjpW
+  grand-type: password
+  username: admin
+  password: 12345
+
 minio:
   url: http://minio-file-service:9000
   username: admin

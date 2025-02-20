@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,6 +17,16 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
+    @PostMapping(value = "/signIn")
+    public ResponseEntity<Map<String, Object>> signIn(@RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.signIn(userDto), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/signUp")
+    public ResponseEntity<UserDto> signUp(@RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.signUp(userDto), HttpStatus.OK);
+    }
 
     @GetMapping(value = "/getUsers")
     public ResponseEntity<List<UserDto>> getUsers() {
