@@ -2,6 +2,7 @@ package kz.userservice.middle.controller;
 
 import kz.userservice.middle.dto.UserDto;
 import kz.userservice.middle.service.UserService;
+import kz.userservice.middle.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,15 @@ public class UserController {
         return new ResponseEntity<>(userService.signUp(userDto), HttpStatus.OK);
     }
 
+    @PostMapping("/update-password")
+    public ResponseEntity<Map<String, Object>> updatePassword(@RequestParam String password) {
+        if(userService.changePassword(password)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
     @GetMapping(value = "/getUsers")
     public ResponseEntity<List<UserDto>> getUsers() {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
@@ -46,6 +56,11 @@ public class UserController {
     @PostMapping("/addUser")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDTO) {
         return new ResponseEntity<>(userService.addUser(userDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<String> check() {
+        return new ResponseEntity<>(UserUtil.getCurrentUsername(), HttpStatus.OK);
     }
 
     @PostMapping("/deleteUser")

@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.Response;
 import kz.userservice.middle.dto.UserDto;
 import kz.userservice.middle.mapper.UserMapper;
 import kz.userservice.middle.repository.UserRepository;
+import kz.userservice.middle.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
@@ -44,7 +45,7 @@ public class UserService {
     private String grandType;
 
     public Map<String, Object> signIn(UserDto userDto) {
-        String token = url+"/realms/"+realm+"/protocol/openid-connect/token";
+        String token = url + "/realms/" + realm + "/protocol/openid-connect/token";
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("client_id", clientId);
         form.add("client_secret", clientSecret);
@@ -57,20 +58,38 @@ public class UserService {
         ResponseEntity<Map> response = restTemplate.postForEntity(token, new HttpEntity<>(form, httpHeaders), Map.class);
         Map<String, Object> responseBody = response.getBody();
 
-        if(!response.getStatusCode().is2xxSuccessful() || responseBody == null) {
+        if (!response.getStatusCode().is2xxSuccessful() || responseBody == null) {
             log.error("Sign-in failed", responseBody);
             throw new RuntimeException("Sign-in failed");
         }
         return responseBody;
     }
 
-    public UserDto signUp(UserDto userDto){
+    public UserDto signUp(UserDto userDto) {
         UserRepresentation userRepresentation = signUpUser(userDto);
         UserDto newUser = new UserDto();
         newUser.setLogin(userRepresentation.getUsername());
         newUser.setEmail(userRepresentation.getEmail());
         newUser.setFullName(userRepresentation.getFirstName());
         return newUser;
+    }
+
+    public boolean changePassword(String newPassword) {
+        List<UserRepresentation> userRepresentations = keycloak.realm(realm)
+                .users()
+                .search(UserUtil.getCurrentUsername());
+        if(userRepresentations.isEmpty()) {
+            return false;
+        }
+        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+        credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+        credentialRepresentation.setValue(newPassword);
+        credentialRepresentation.setTemporary(false);
+        keycloak.realm(realm)
+                .users()
+                .get(userRepresentations.get(0).getId())
+                .resetPassword(credentialRepresentation);
+        return true;
     }
 
     public List<UserDto> getUsers() {
@@ -112,12 +131,12 @@ public class UserService {
                 .users()
                 .create(userRepresentation);
 
-        if(response.getStatus() != HttpStatus.CREATED.value()) {
+        if (response.getStatus() != HttpStatus.CREATED.value()) {
 
             log.error("Sign-up failed", response);
             throw new RuntimeException("Sign-up failed");
         }
         List<UserRepresentation> users = keycloak.realm(realm).users().search(userDto.getLogin());
-        return  users.stream().findFirst().orElse(null);
+        return users.stream().findFirst().orElse(null);
     }
 }

@@ -24,7 +24,7 @@ keycloak:
   url: http://localhost:8002/auth
   realm: master
   client-id: user-service-client
-  client-secret: FjsgocFvk2rMfY59PfFliT44s8LtcjpW
+  client-secret: uxfjcmFmnMH7l7Ui0grOiyOTj9sVaebZ
   grand-type: password
   username: admin
   password: 12345
